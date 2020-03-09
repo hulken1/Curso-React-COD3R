@@ -1,7 +1,11 @@
 import React from 'react'
 import IconButton from '../template/IconButton'
+import { connect } from 'react-redux'
 import { faTrashAlt, faCheck, faUndoAlt } from '@fortawesome/free-solid-svg-icons'
-export default props => {
+import { bindActionCreators } from 'redux'
+import { toogleIsDone, deleteTodo } from './TodoActions'
+
+const TodoList = props => {
 
     const renderRows = () => {
         const list = props.list || []
@@ -14,21 +18,21 @@ export default props => {
                     <IconButton
                         variant='success'
                         icon={faCheck}
-                        onClick={() => props.handleMarkAsDone(todo)}
+                        onClick={() => props.toogleIsDone(todo)}
                         hide={todo.done}
                         >
                     </IconButton>
                     <IconButton
                         variant='warning'
                         icon={faUndoAlt}
-                        onClick={() => props.handleMarkAsPending(todo)}
+                        onClick={() => props.toogleIsDone(todo)}
                         hide={!todo.done}
                         >
                     </IconButton>
                     <IconButton
                         variant='danger'
                         icon={faTrashAlt}
-                        onClick={() => props.handleRemove(todo)}
+                        onClick={() => props.deleteTodo(todo)}
                         hide={!todo.done}
                         >
                     </IconButton>
@@ -55,3 +59,11 @@ export default props => {
         </table>
     )
 }
+
+const mapStateToProps = state => ({
+    list: state.todo.list
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators({ toogleIsDone, deleteTodo }, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList)
